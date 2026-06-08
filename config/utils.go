@@ -19,10 +19,10 @@ func regexMatched(f string, re *regexp.Regexp) bool {
 	if re == nil {
 		return false
 	}
-	if re.FindString(f) != "" {
-		return true
-	}
-	return false
+	// Use MatchString rather than FindString != "": a valid zero-width match
+	// (e.g. an allowlist pattern that can match the empty string) returns "" from
+	// FindString and would otherwise be wrongly treated as no match.
+	return re.MatchString(f)
 }
 
 // joinRegexOr combines multiple |patterns| into a single *regexp.Regexp.
